@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 //https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=600
 
     TextView num1,num2,num3,num4,num5,num6;
-
+    Button btnGetNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,28 +34,43 @@ public class MainActivity extends AppCompatActivity {
         num4 = (TextView)findViewById(R.id.num4);
         num5 = (TextView)findViewById(R.id.num5);
         num6 = (TextView)findViewById(R.id.num6);
+        btnGetNum = (Button)findViewById(R.id.btnGetNum);
 
-        int num[]=new int[7];
-        for(int i=1;i<7;i++){
-            Random r = new Random();
-            num[i]=r.nextInt(45)+1;
-            for(int j=1;j<i;j++){
-                if(num[i]==num[j]){
-                    i--;
+        btnGetNum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int num[]=new int[7];
+                for(int i=1;i<7;i++){
+                    Random r = new Random();
+                    num[i]=r.nextInt(45)+1;
+                    for(int j=1;j<i;j++){
+                        if(num[i]==num[j]){
+                            i--;
+                        }
+                    }
+
+
                 }
+
+                for (int i = 1; i < 7; i++) {
+                    for (int j = i + 1; j < 7; j++) {
+                        if (num[i] > num[j]) {
+                            int non = num[i];
+                            num[i] = num[j];
+                            num[j] = non;
+                        }
+                    }
+                }
+
+
+                num1.setText(num[1]+"");
+                num2.setText(num[2]+"");
+                num3.setText(num[3]+"");
+                num4.setText(num[4]+"");
+                num5.setText(num[5]+"");
+                num6.setText(num[6]+"");
             }
+        });
 
-
-        }
-        for(int i=1;i<7;i++) {
-            Log.i("rantest", num[i] + "");
-        }
-
-        num1.setText(num[1]+"");
-        num2.setText(num[2]+"");
-        num3.setText(num[3]+"");
-        num4.setText(num[4]+"");
-        num5.setText(num[5]+"");
-        num6.setText(num[6]+"");
     }
 }
