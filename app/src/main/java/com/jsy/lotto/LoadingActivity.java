@@ -2,7 +2,10 @@ package com.jsy.lotto;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -21,10 +25,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class LoadingActivity extends Activity {
-    public static int drwNo,drwNo1;
+    int drwNo,drwNo1;
     TextView tvloading;
-
-
+    myDBHelper myHelper;
+    SQLiteDatabase sqlDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,10 @@ public class LoadingActivity extends Activity {
 //애니메이션 시작
         tvloading.startAnimation(mAnimation);
 
-
+        myHelper = new myDBHelper(this);
+        sqlDB=myHelper.getWritableDatabase();
+        myHelper.onUpgrade(sqlDB, 1,2);
+        sqlDB.close();
 
 
 
@@ -74,6 +81,7 @@ public class LoadingActivity extends Activity {
 
         t.start();
 
+
     }
 
     @Override
@@ -88,7 +96,7 @@ public class LoadingActivity extends Activity {
 
     public void getNum() throws IOException {
 
-        for(int i=500;i<1000;i++) {
+        for(int i=800;i<1000;i++) {
             StringBuilder urlBuilder = new StringBuilder("https://www.dhlottery.co.kr/common.do?method=getLottoNumber"); /*URL*/
             urlBuilder.append("&" + URLEncoder.encode("drwNo", "UTF-8") + "=" + URLEncoder.encode(i+"", "UTF-8")); /*페이지번호*/
             URL url = new URL(urlBuilder.toString());
@@ -111,14 +119,15 @@ public class LoadingActivity extends Activity {
 
 
             jParsing(sb.toString());
-            Log.i("drwNotest",drwNo+"");
+            //Log.i("drwNotest",drwNo+"");
 
             if(drwNo==drwNo1) {
-                Log.i("drwNotest2", drwNo + " " + drwNo1);
+                //Log.i("drwNotest2", drwNo + " " + drwNo1);
                 break;
             }
             drwNo1=drwNo;
-            Log.i("drwNotest1",drwNo+"");
+            //Log.i("drwNotest1",drwNo+"");
+
 
 
         }
@@ -128,11 +137,46 @@ public class LoadingActivity extends Activity {
     void jParsing(String data){
 
         try {
+            myHelper = new myDBHelper(this);
             JSONObject jObject = new JSONObject(data);
-
+            //Log.i("drwNotest",drwNo+"");
             drwNo = jObject.getInt("drwNo");
+            //Log.i("drwNotest1",drwNo+"");
+            sqlDB=myHelper.getWritableDatabase();
+            //Log.i("drwNotest2",drwNo+"");
+
+            //Log.i("drwNotest3",drwNo+"");
+            //myHelper.onCreate(sqlDB);
+
+            Log.i("drwNotest4",drwNo+"");
+
+            Log.i("drwNotest5",drwNo+"");
+
+            sqlDB.execSQL("insert into round values( "+drwNo+" );");
+            Log.i("drwNotest6",drwNo+"");
+            sqlDB.close();
+            Log.i("drwNotest7",drwNo+"");
 
         }catch (Exception e){ Log.i("mytagcatch",e.getLocalizedMessage());}
 
+    }
+
+    public class myDBHelper extends SQLiteOpenHelper {
+        public myDBHelper(Context context){
+            super(context,"lotto",null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            /*db.execSQL("create table round ( drwNo integer primary key, firstWinamnt integer, " +
+                    "drwtNo1 integer, drwtNo2 integer, drwtNo3 integer, drwtNo4 integer, drwtNo5 integer, drwtNo6 integer, bnusNo integer);");*/
+            db.execSQL("create table round ( drwNo integer primary key);");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("drop table if exists round");
+            onCreate(db);
+        }
     }
 }
