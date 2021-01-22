@@ -13,16 +13,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Random;
 
 import javax.xml.transform.Templates;
 
 public class MainActivity extends AppCompatActivity {
-//https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=600
+
 
     TextView num1,num2,num3,num4,num5,num6;
     Button btnGetNum;
+
+    public static int drwNo,drwNo1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 num4.setText(num[4]+"");
                 num5.setText(num[5]+"");
                 num6.setText(num[6]+"");
+
             }
         });
 
+
+
+
     }
+
+
 }
