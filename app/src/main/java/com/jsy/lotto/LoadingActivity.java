@@ -25,7 +25,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class LoadingActivity extends Activity {
-    int drwNo,drwNo1;
+    int drwNo,drwNo1,firstWinamnt,drwtNo1,drwtNo2,drwtNo3,drwtNo4,drwtNo5,drwtNo6,bnusNo;
     TextView tvloading;
     myDBHelper myHelper;
     SQLiteDatabase sqlDB;
@@ -137,10 +137,19 @@ public class LoadingActivity extends Activity {
     void jParsing(String data){
 
         try {
+
             myHelper = new myDBHelper(this);
             JSONObject jObject = new JSONObject(data);
             //Log.i("drwNotest",drwNo+"");
             drwNo = jObject.getInt("drwNo");
+            firstWinamnt = jObject.getInt("firstWinamnt");
+            drwtNo1 = jObject.getInt("drwtNo1");
+            drwtNo2 = jObject.getInt("drwtNo2");
+            drwtNo3 = jObject.getInt("drwtNo3");
+            drwtNo4 = jObject.getInt("drwtNo4");
+            drwtNo5 = jObject.getInt("drwtNo5");
+            drwtNo6 = jObject.getInt("drwtNo6");
+            bnusNo = jObject.getInt("bnusNo");
             //Log.i("drwNotest1",drwNo+"");
             sqlDB=myHelper.getWritableDatabase();
             //Log.i("drwNotest2",drwNo+"");
@@ -152,7 +161,7 @@ public class LoadingActivity extends Activity {
 
             Log.i("drwNotest5",drwNo+"");
 
-            sqlDB.execSQL("insert into round values( "+drwNo+" );");
+            sqlDB.execSQL("insert into round values( "+drwNo+","+firstWinamnt+","+drwtNo1+","+drwtNo2+","+drwtNo3+","+drwtNo4+","+drwtNo5+","+drwtNo6+","+bnusNo+" );");
             Log.i("drwNotest6",drwNo+"");
             sqlDB.close();
             Log.i("drwNotest7",drwNo+"");
@@ -168,9 +177,9 @@ public class LoadingActivity extends Activity {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            /*db.execSQL("create table round ( drwNo integer primary key, firstWinamnt integer, " +
-                    "drwtNo1 integer, drwtNo2 integer, drwtNo3 integer, drwtNo4 integer, drwtNo5 integer, drwtNo6 integer, bnusNo integer);");*/
-            db.execSQL("create table round ( drwNo integer primary key);");
+            db.execSQL("create table round ( drwNo integer primary key, firstWinamnt text, " +
+                    "drwtNo1 integer, drwtNo2 integer, drwtNo3 integer, drwtNo4 integer, drwtNo5 integer, drwtNo6 integer, bnusNo integer);");
+
         }
 
         @Override
