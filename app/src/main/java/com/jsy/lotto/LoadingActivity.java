@@ -4,6 +4,7 @@ package com.jsy.lotto;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -62,25 +63,33 @@ public class LoadingActivity extends Activity {
 
 
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                try {
-                    getNum();
-                    Log.i("drwNotest2", drwNo + " " + drwNo1);
-                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    try {
+                        sqlDB = myHelper.getReadableDatabase();
+                        Cursor  cursor;
+                        cursor = sqlDB.rawQuery("select * from round;",null);
+                        while (!cursor.moveToNext()) {
+                            getNum();
+                        }
+                        Log.i("drwNotest2", drwNo + " " + drwNo1);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
-            }
+            });
+            t.start();
 
-        });
 
-        t.start();
+
 
 
     }
@@ -178,14 +187,18 @@ public class LoadingActivity extends Activity {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("create table round ( drwNo integer primary key, firstWinamnt integer, " +
-                    "drwtNo1 integer, drwtNo2 integer, drwtNo3 integer, drwtNo4 integer, drwtNo5 integer, drwtNo6 integer, bnusNo integer);");
+
+                db.execSQL("create table if not exists round ( drwNo integer primary key, firstWinamnt integer, " +
+                        "drwtNo1 integer, drwtNo2 integer, drwtNo3 integer, drwtNo4 integer, drwtNo5 integer, drwtNo6 integer, bnusNo integer)" +
+                        ";");
+
+
 
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("drop table if exists round");
+            //db.execSQL("drop table if exists round");
             onCreate(db);
         }
     }
