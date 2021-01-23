@@ -97,7 +97,7 @@ public class LoadingActivity extends Activity {
 
     public void getNum() throws IOException {
 
-        for(int i=800;i<1000;i++) {
+        for(int i=1;i<1000;i++) {
             StringBuilder urlBuilder = new StringBuilder("https://www.dhlottery.co.kr/common.do?method=getLottoNumber"); /*URL*/
             urlBuilder.append("&" + URLEncoder.encode("drwNo", "UTF-8") + "=" + URLEncoder.encode(i+"", "UTF-8")); /*페이지번호*/
             URL url = new URL(urlBuilder.toString());
