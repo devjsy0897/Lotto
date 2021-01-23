@@ -25,7 +25,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class LoadingActivity extends Activity {
-    int drwNo,drwNo1,firstWinamnt,drwtNo1,drwtNo2,drwtNo3,drwtNo4,drwtNo5,drwtNo6,bnusNo;
+    int drwNo,drwNo1,drwtNo1,drwtNo2,drwtNo3,drwtNo4,drwtNo5,drwtNo6,bnusNo;
+    Long firstWinamnt;
     TextView tvloading;
     myDBHelper myHelper;
     SQLiteDatabase sqlDB;
@@ -142,7 +143,7 @@ public class LoadingActivity extends Activity {
             JSONObject jObject = new JSONObject(data);
             //Log.i("drwNotest",drwNo+"");
             drwNo = jObject.getInt("drwNo");
-            firstWinamnt = jObject.getInt("firstWinamnt");
+            firstWinamnt = jObject.getLong("firstWinamnt");
             drwtNo1 = jObject.getInt("drwtNo1");
             drwtNo2 = jObject.getInt("drwtNo2");
             drwtNo3 = jObject.getInt("drwtNo3");
@@ -157,14 +158,14 @@ public class LoadingActivity extends Activity {
             //Log.i("drwNotest3",drwNo+"");
             //myHelper.onCreate(sqlDB);
 
-            Log.i("drwNotest4",drwNo+"");
+            //Log.i("drwNotest4",drwNo+"");
 
-            Log.i("drwNotest5",drwNo+"");
+            //Log.i("drwNotest5",drwNo+"");
 
             sqlDB.execSQL("insert into round values( "+drwNo+","+firstWinamnt+","+drwtNo1+","+drwtNo2+","+drwtNo3+","+drwtNo4+","+drwtNo5+","+drwtNo6+","+bnusNo+" );");
-            Log.i("drwNotest6",drwNo+"");
+            Log.i("drwNotest6",firstWinamnt+"");
             sqlDB.close();
-            Log.i("drwNotest7",drwNo+"");
+            //Log.i("drwNotest7",drwNo+"");
 
         }catch (Exception e){ Log.i("mytagcatch",e.getLocalizedMessage());}
 
@@ -177,7 +178,7 @@ public class LoadingActivity extends Activity {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("create table round ( drwNo integer primary key, firstWinamnt text, " +
+            db.execSQL("create table round ( drwNo integer primary key, firstWinamnt integer, " +
                     "drwtNo1 integer, drwtNo2 integer, drwtNo3 integer, drwtNo4 integer, drwtNo5 integer, drwtNo6 integer, bnusNo integer);");
 
         }
